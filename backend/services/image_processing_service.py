@@ -3,8 +3,6 @@ import numpy as np
 
 from typing import Optional
 
-from pyzbar.pyzbar import decode as pyzbar_decode
-
 
 # ============================================================
 # BYTES -> IMAGE
@@ -368,39 +366,22 @@ def detect_qr_codes(
             )
 
         # ====================================================
-        # 3. pyzbar / zbar
+        # 3. OpenCV fallback QR detection
         # ====================================================
 
         try:
+            qr_detector = cv2.QRCodeDetector()
 
-            decoded_objects = (
-                pyzbar_decode(img)
+            decoded_text, points, _ = (
+                qr_detector.detectAndDecode(img)
             )
 
-            for obj in decoded_objects:
-
-                # Only process QR codes
-                if obj.type != "QRCODE":
-                    continue
-
-                try:
-
-                    value = (
-                        obj.data
-                        .decode("utf-8")
-                        .strip()
-                    )
-
-                except UnicodeDecodeError:
-
-                    continue
-
-                _add(value)
+            _add(decoded_text)
 
         except Exception as exc:
 
             print(
-                "pyzbar QR detection failed:",
+                "OpenCV fallback QR detection failed:",
                 exc,
             )
 
