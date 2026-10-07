@@ -5,7 +5,7 @@ import {
 } from "@/types/card";
 
 const API_BASE =
-  process.env.NEXT_API_URL || "https://business-card-scanner-vt0x.onrender.com";
+    process.env.NEXT_API_URL || "https://business-card-scanner-vt0x.onrender.com";
 
 // =====================================================
 // AUTH TYPES
