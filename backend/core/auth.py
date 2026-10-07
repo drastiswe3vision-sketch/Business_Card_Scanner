@@ -4,7 +4,7 @@ import jwt
 from fastapi import Header, HTTPException
 
 from backend.core.config import settings
-from backend.core.supabase import supabase
+from backend.core.supabase import supabase_admin
 
 
 ALGORITHM = "HS256"
@@ -72,7 +72,7 @@ def get_current_user(
 
     try:
         response = (
-            supabase
+            supabase_admin
             .table("login")
             .select("id, email, full_name")
             .eq("id", user_id)
@@ -88,7 +88,7 @@ def get_current_user(
         # Retry once
         try:
             response = (
-                supabase
+                supabase_admin
                 .table("login")
                 .select("id, email, full_name")
                 .eq("id", user_id)
