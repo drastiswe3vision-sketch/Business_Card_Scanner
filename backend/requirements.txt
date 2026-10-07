@@ -12,3 +12,4 @@ Pillow
 google-genai
 opencv-python-headless
 PyMuPDF
+tavily
