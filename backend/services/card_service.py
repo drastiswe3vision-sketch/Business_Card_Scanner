@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, timezone
-from backend.core.supabase import supabase
+from backend.core.supabase import supabase_admin
 
 
 TABLE_NAME = "business_cards"
@@ -73,7 +73,7 @@ def create_card(
     # =================================================
 
     retention_response = (
-        supabase
+        supabase_admin
         .table("login")
         .select("card_retention_days")
         .eq("id", user_id)
@@ -142,7 +142,7 @@ def create_card(
     # =================================================
 
     response = (
-        supabase
+        supabase_admin
         .table(TABLE_NAME)
         .insert(data)
         .execute()
@@ -204,7 +204,7 @@ def delete_expired_cards(
 
     try:
         (
-            supabase
+            supabase_admin
             .table(TABLE_NAME)
             .delete()
             .eq(
@@ -250,7 +250,7 @@ def get_all_cards(
     # =================================================
 
     response = (
-        supabase
+        supabase_admin
         .table(TABLE_NAME)
         .select("*")
         .eq(
@@ -280,7 +280,7 @@ def delete_card(
     """
 
     response = (
-        supabase
+        supabase_admin
         .table(TABLE_NAME)
         .delete()
         .eq(
