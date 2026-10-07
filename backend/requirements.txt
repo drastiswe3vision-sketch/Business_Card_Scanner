@@ -11,3 +11,4 @@ pypdf
 Pillow
 google-genai
 opencv-python-headless
+PyMuPDF
