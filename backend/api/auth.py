@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime, timedelta, timezone
 
-from backend.core.supabase import supabase
+from backend.core.supabase import supabase_admin
 from backend.core.auth import (
     create_access_token,
     get_current_user,
@@ -46,7 +46,7 @@ def signup(data: SignupRequest):
 
         # Check if account already exists
         existing_user = (
-            supabase
+            supabase_admin
             .table("login")
             .select("id")
             .ilike("email", email)
@@ -61,7 +61,7 @@ def signup(data: SignupRequest):
 
         # Create new account
         response = (
-            supabase
+            supabase_admin
             .table("login")
             .insert({
                 "full_name": data.full_name.strip(),
@@ -112,7 +112,7 @@ def login(data: LoginRequest):
 
         # Find user by email
         response = (
-            supabase
+            supabase_admin
             .table("login")
             .select("*")
             .ilike("email", email)
@@ -166,7 +166,7 @@ def logout(data: LogoutRequest):
     try:
         # Find the current user
         response = (
-            supabase
+            supabase_admin
             .table("login")
             .select("id, email, full_name")
             .eq("id", data.user_id)
@@ -214,7 +214,7 @@ def get_retention(
 ):
     try:
         response = (
-            supabase
+            supabase_admin
             .table("login")
             .select("card_retention_days")
             .eq("id", current_user["id"])
@@ -268,7 +268,7 @@ def update_retention(
 
         # Save preference for this user
         (
-            supabase
+            supabase_admin
             .table("login")
             .update({
                 "card_retention_days": retention_days
@@ -283,7 +283,7 @@ def update_retention(
 
         if retention_days is None:
             (
-                supabase
+                supabase_admin
                 .table("business_cards")
                 .update({
                     "expires_at": None
@@ -298,7 +298,7 @@ def update_retention(
 
         else:
             cards_response = (
-                supabase
+                supabase_admin
                 .table("business_cards")
                 .select("id, created_at")
                 .eq("user_id", user_id)
@@ -326,7 +326,7 @@ def update_retention(
                 )
 
                 (
-                    supabase
+                    supabase_admin
                     .table("business_cards")
                     .update({
                         "expires_at": expires_at.isoformat()
@@ -345,7 +345,7 @@ def update_retention(
             ).isoformat()
 
             (
-                supabase
+                supabase_admin
                 .table("business_cards")
                 .delete()
                 .eq(
